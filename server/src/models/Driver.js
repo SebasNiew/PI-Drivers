@@ -1,13 +1,14 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
+  //funcion que recibe la instancia de sequelize que define el modelo
   sequelize.define(
     "Driver",
     {
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, //name,id,lastname, description, image, nationality, birthday
         allowNull: false,
-        unique: true,
+  
       },
       id: {
         type: DataTypes.UUID,
@@ -16,21 +17,33 @@ module.exports = (sequelize) => {
         allowNull: false,
         unique: true,
       },
-      apellido: {
-        type: DataTypes.STRING, // Agregar campo Apellido
+      lastname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // Agregar campo Apellido
       },
-      descripcion: {
-        type: DataTypes.TEXT, // Agregar campo Descripción
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // Agregar campo Descripción
       },
-      imagen: {
+      image: {
         type: DataTypes.STRING,
         allowNull: true, // Agregar campo Imagen
       },
-      nacionalidad: {
-        type: DataTypes.STRING, // Agregar campo Nacionalidad
+      nationality: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // Agregar campo Nacionalidad
       },
-      dob: {
-        type: DataTypes.STRING, // Agregar campo Fecha de Nacimiento
+      birthday: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // Agregar campo Fecha de Nacimiento
+      },
+      created: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     { timestamps: false }
