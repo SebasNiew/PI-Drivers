@@ -17,15 +17,13 @@ const getAllTeams = async () => {
         // Verifica si el campo "teams" está presente
         if (driver.teams) {
           // Separa los nombres de los equipos y guarda en la base de datos
-          const teamNames = driver.teams
-            .split(",")
-            .map((name) => name.trim());
-          for (const name of teamNames) {
-            await Team.findOrCreate({ where: { name: name } });
+          const teamNames = driver.teams.split(",").map((name) => name.trim());
+          for (const teamname of teamNames) {
+            await Team.findOrCreate({ where: { teamname } }); // Cambia "name" a "teamname"
           }
         } else if (driver.team) {
           // En el caso de un solo equipo, guarda ese equipo en la base de datos
-          await Team.findOrCreate({ where: { name: driver.team.trim() } });
+          await Team.findOrCreate({ where: { teamname: driver.team.trim() } }); // Cambia "name" a "teamname"
         }
       }
     }

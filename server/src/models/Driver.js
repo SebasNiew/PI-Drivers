@@ -5,11 +5,6 @@ module.exports = (sequelize) => {
   sequelize.define(
     "Driver",
     {
-      name: {
-        type: DataTypes.STRING, //name,id,lastname, description, image, nationality, birthday
-        allowNull: false,
-  
-      },
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -17,6 +12,12 @@ module.exports = (sequelize) => {
         allowNull: false,
         unique: true,
       },
+
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
       lastname: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -33,7 +34,7 @@ module.exports = (sequelize) => {
       },
       nationality: {
         type: DataTypes.STRING,
-        allowNull: false,
+
         // Agregar campo Nacionalidad
       },
       birthday: {

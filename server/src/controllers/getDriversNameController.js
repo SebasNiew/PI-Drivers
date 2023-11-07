@@ -1,66 +1,33 @@
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
+const { Driver } = require("../db");
 const axios = require("axios");
-const { Driver, Team } = require("../db");
-const { Op } = require("sequelize");
+const imageUrl = "https://acortar.link/7kVOdJ";
 
-// Función para buscar en la API
-const findDriversAPI = async (name) => {
-  const lowercaseName = name.toLowerCase();
-  const imageUrl = "https://acortar.link/7kVOdJ"; // Imagen predeterminada
-
-  try {
-    const response = await axios.get(
-      `http://localhost:5000/drivers?search=${lowercaseName}`
-    );
-
-    const apiDrivers = response.data.results.filter((driver) =>
-      driver.name.forename.toLowerCase().includes(lowercaseName)
-    );
-
-    return apiDrivers.map((driver) => ({
-      driverId: driver.id,
-      firstName: driver.name.forename,
-      lastName: driver.name.surname,
-      description: driver.description,
-      image: driver.image && driver.image.url ? driver.image.url : imageUrl,
-      nationality: driver.nationality,
-      birthdate: driver.dob,
-      teams: driver.teams,
-    }));
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Función para buscar en la base de datos
-const findDriversBDD = async (name) => {
-  try {
-    return await Driver.findAll({
-      where: {
-        name: {
-          [Op.iLike]: `%${name}%`,
-        },
-      },
-      include: [
-        {
-          model: Team,
-          attributes: ["name"],
-          through: {
-            attributes: [],
-          },
-        },
-      ],
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Función para combinar resultados
 const findDrivers = async (name) => {
-  const bdd = await findDriversBDD(name);
-  const api = await findDriversAPI(name);
+  const { data } = await axios.get(
+    `http://localhost:5000/drivers/?name.forename=${name}`
+  );
+  const nameToLower = name.toLowerCase(); //*convierte el nombre de busqueda Name en minuscula
+  const filteredDrivers = data.filter(
+    (
+      driver //*Filtra los conductores de la respuesta de la API en función de una coincidencia insensible a mayúsculas y minúsculas en la propiedad driverRef:
+    ) => driver.driverRef.toLowerCase().includes(nameToLower)
+  );
 
-  return [...bdd, ...api].slice(0, 15);
+  const filteredDB = await Driver.findAll({
+    where: { lastname: { [Op.iLike]: `%${nameToLower}%` } },
+  });
+
+  //*Si no se encuentran conductores ni en la API ni en la base de datos, se lanza un error
+  if (filteredDrivers.length === 0 && filteredDB.length === 0) {
+    throw Error(`No se encontraron conductores con el nombre: ${name}`);
+  }
+
+  const challengedFilters = addImage(filteredDrivers); //verifica que contengan img
+
+  return [...challengedFilters.slice(0, 15), ...filteredDB.slice(0, 15)]; //tira los primeros 15 tanto de BD como API
 };
+
 
 module.exports = { findDrivers };

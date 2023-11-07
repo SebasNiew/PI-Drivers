@@ -1,7 +1,6 @@
 const { Driver, Team } = require("../db");
 const Sequelize = require("sequelize");
-const axios = require("axios");
-const Op = Sequelize.Op;
+const { Op } = Sequelize;
 
 const createDriver = async (
   name,
@@ -9,31 +8,50 @@ const createDriver = async (
   description,
   nationality,
   birthday,
-  teams
+  teamsString
 ) => {
   try {
-    // Crear un nuevo conductor
+    const teamsArray = teamsString.split(",").map((team) => team.trim());
+    // Verifica si el conductor ya existe en la base de datos
+    const existingDriver = await Driver.findOne({
+      where: {
+        name,
+        lastname,
+        description,
+        nationality,
+        birthday,
+      },
+    });
+
+    if (existingDriver) {
+      throw new Error("Driver already exists");
+    }
+
+    // Crea un nuevo conductor
     const newDriver = await Driver.create({
       name,
       lastname,
       description,
+      image: "https://example.com/driver-image.jpg",
       nationality,
       birthday,
     });
 
-    // Buscar equipos existentes en la base de datos
-    const existTeams = await Team.findAll({
+    // Busca equipos existentes en la base de datos
+    const existingTeams = await Team.findAll({
       where: {
-        name: {
-          [Sequelize.Op.in]: teams,
+        teamname: {
+          [Sequelize.Op.in]: teamsArray,
         },
       },
     });
 
-    // Asociar los equipos con el nuevo conductor
-    await newDriver.addTeams(existTeams);
+    // Asocia los equipos con el nuevo conductor
+    if (existingTeams.length > 0) {
+      await newDriver.addTeams(existingTeams);
+    }
 
-    // Obtener la relación del conductor con los equipos
+    // Obtiene la relación del conductor con los equipos
     const driverRelation = await Driver.findOne({
       where: {
         id: newDriver.id,
@@ -41,7 +59,7 @@ const createDriver = async (
       include: [
         {
           model: Team,
-          attributes: ["name"],
+          attributes: ["teamname"],
           through: {
             attributes: [],
           },

@@ -8,7 +8,7 @@ const getDriverById = async (id, source) => {
       const searchById = await Driver.findByPk(id, {
         include: {
           model: Team,
-          attributes: ["name"],
+          attributes: ["teamname"],
           through: { attributes: [] },
         },
       });

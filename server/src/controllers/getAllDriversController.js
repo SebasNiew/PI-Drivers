@@ -7,7 +7,6 @@ const getAllDrivers = async () => {
     const apiResponse = await axios.get(`http://localhost:5000/drivers`);
     const externalData = apiResponse.data;
 
-    // Mapear los datos de la API externa
     const apiDrivers = externalData.map((Elem) => {
       const imageUrl =
         Elem.image && Elem.image.url
@@ -15,13 +14,13 @@ const getAllDrivers = async () => {
           : "https://acortar.link/7kVOdJ";
       return {
         driverId: Elem.id,
-        firstName: Elem.name.forename,
-        lastName: Elem.name.surname,
-        description: Elem.description,
+        firstName: Elem.name && Elem.name.forename ? Elem.name.forename : 'Nombre no disponible',
+        lastName: Elem.name && Elem.name.surname ? Elem.name.surname : 'Apellido no disponible',
+        description: Elem.description || 'Descripción no disponible',
         image: imageUrl,
-        nationality: Elem.nationality,
-        birthdate: Elem.dob,
-        teams: Elem.teams,
+        nationality: Elem.nationality || 'Nacionalidad no disponible',
+        birthdate: Elem.dob || 'Fecha de nacimiento no disponible',
+        teams: Elem.teams || ['Equipos no disponibles'],
         created: false,
       };
     });
@@ -31,7 +30,7 @@ const getAllDrivers = async () => {
       include: [
         {
           model: Team,
-          attributes: ["name"],
+          attributes: ["teamname"], // Cambiar "name" por "teamname"
           through: {
             attributes: [],
           },
@@ -48,7 +47,7 @@ const getAllDrivers = async () => {
       image: dbDriver.image,
       nationality: dbDriver.nationality,
       birthdate: dbDriver.birthdate,
-      teams: dbDriver.Teams.map((team) => team.name),
+      teams: dbDriver.Teams.map((team) => team.teamname), // Cambiar "name" por "teamname"
     }));
 
     // Combinar datos de la API y la base de datos local

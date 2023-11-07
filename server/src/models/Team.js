@@ -6,7 +6,7 @@ module.exports = (sequelize) => {
   sequelize.define(
     "Team",
     {
-      name: {
+      teamname: {
         type: DataTypes.STRING,
         allowNull: false,
       },
