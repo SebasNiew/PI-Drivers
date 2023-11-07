@@ -1,0 +1,51 @@
+/* SearchBar.module.css */
+
+.container {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.input {
+  padding: 5px; /* Ajusta el padding para hacerlo más pequeño */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px; /* Reduce el tamaño de la fuente */
+  margin-right: 5px; /* Reduce el margen derecho */
+  width: 150px; /* Ajusta el ancho */
+  transition: border-color 0.3s;
+}
+
+.input::placeholder {
+  color: #999;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.buttons {
+  background-color: #FF0000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px; /* Ajusta el padding para hacerlo más pequeño */
+  font-size: 14px; /* Reduce el tamaño de la fuente */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.buttons:hover {
+  background-color: #D70000;
+}
+
+
+.buttons:hover {
+  background-color: #D70000;
+}
+
+.searchbar:hover { /* Corrección: Mover la regla :hover dentro de .searchbar */
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.2);
+}

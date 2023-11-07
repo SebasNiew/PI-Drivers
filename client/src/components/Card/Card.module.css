@@ -1,0 +1,27 @@
+.Card {
+    width: 300px;
+    max-width: 100%; /* Establecer un ancho máximo del 100% del contenedor */
+    background-color: #0000004f;
+    border: 5px solid #cccccc00;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(196, 137, 137, 0.2);
+    text-align: center; /* Centrar el contenido horizontalmente */
+    cursor: pointer;
+    -moz-osx-foont-smoothing:grayscale;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    transition:transform 0,25s ease-out;
+    text-decoration-color: aliceblue;
+  }
+
+  .Card:hover{
+    transform: scale(1.05);
+}
+  
+  .Card img {
+    max-width:55%; 
+    height: auto; 
+    display: block; 
+    margin: 0 auto; 
+  }

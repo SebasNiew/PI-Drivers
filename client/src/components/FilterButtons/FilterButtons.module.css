@@ -1,0 +1,37 @@
+/* FilterButtons.module.css */
+
+.container {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  padding: 5px; /* Ajusta el padding para hacerlo más pequeño */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px; /* Reduce el tamaño de la fuente */
+  margin-right: 5px; /* Reduce el margen derecho */
+  width: 150px; /* Ajusta el ancho */
+  transition: border-color 0.3s;
+}
+
+.button::placeholder {
+  color: #999;
+}
+
+.button:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.teamOption {
+  padding: 5px; /* Ajusta el padding para hacerlo más pequeño */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px; /* Reduce el tamaño de la fuente */
+  margin-right: 5px; /* Reduce el margen derecho */
+  width: 150px; /* Ajusta el ancho */
+  transition: border-color 0.3s;
+}

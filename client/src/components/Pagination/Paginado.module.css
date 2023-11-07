@@ -1,0 +1,51 @@
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px; /* Ajusta la distancia desde la parte superior */
+  background: linear-gradient(to right, #838080, rgba(255, 255, 255, 0.432));
+  border: 0; /* Borde */
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  background-color: #71787e; /* Color de fondo del botón */
+  color: #fff; /* Color del texto del botón */
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2980b9; /* Cambia el color al pasar el cursor sobre el botón */
+}
+
+.page-number {
+  background-color: #fff; /* Color de fondo de los números de página */
+  color: #333; /* Color del texto de los números de página */
+  border: 2px solid #ccc; /* Borde de los números de página */
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.page-number:hover {
+  background-color: #eee; /* Cambia el color al pasar el cursor sobre los números de página */
+}
+
+.active {
+  background-color: rgba(235, 49, 16, 0.979); /* Color de fondo para la página actual */
+  color: #fff; /* Color del texto para la página actual */
+}

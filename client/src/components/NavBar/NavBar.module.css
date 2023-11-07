@@ -1,0 +1,22 @@
+.box {
+  background-color: #333; /* Fondo negro */
+  color: #fff; /* Texto blanco */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Estilos para los enlaces (links) */
+.box a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+  margin: 0 10px;
+  transition: color 0.3s;
+}
+
+.box a:hover {
+  color:coral;
+}
