@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useRef } from "react";
 import Card from "../Card/Card";
 import style from "./CardsContainer.module.css";
 import { orderDrivers } from "../../redux/actions";
@@ -7,70 +6,44 @@ import { orderDrivers } from "../../redux/actions";
 const CardsContainer = ({ currentPage, itemsPerPage }) => {
   const allDrivers = useSelector((state) => state.allDrivers);
   const searchedDriver = useSelector((state) => state.searchedDriver);
-  console.log(searchedDriver);
   const filters = useSelector((state) => state.filters);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const dispatch = useDispatch();
-  const filteredDriversRef = useRef([]);
 
-  useEffect(() => {
-    const applyOrder = (orderType) => {
-      dispatch(orderDrivers(orderType));
-    };
+  // Agregamos una variable para determinar qué conductores se deben renderizar
+  const driversToRender = Array.isArray(searchedDriver) && searchedDriver.length > 0 ? searchedDriver : allDrivers;
 
+  // Aplicamos la lógica de filtros y ordenamiento a los conductores a renderizar
+  let filteredDrivers = driversToRender.filter((driver) => {
     if (filters && filters.source) {
-      // Aplicar filtro por origen (API o DB)
-      const filteredDriversBySource = allDrivers.filter(
-        (driver) => driver.source === filters.source
-      );
-      filteredDriversRef.current = filters.team
-        ? filteredDriversBySource.filter((driver) =>
-            driver.teams.includes(filters.team)
-          )
-        : filteredDriversBySource;
-    } else {
-      if (filters && filters.team) {
-        filteredDriversRef.current = allDrivers.filter((driver) => driver.teams.includes(filters.team));
-      } else {
-        filteredDriversRef.current = allDrivers;
-      }
+      return driver.source === filters.source;
     }
+    return true; // Si no hay filtro de origen, se muestran todos
+  });
+ 
+  if (filters && filters.team) {
+    filteredDrivers = filteredDrivers.filter((driver) => driver.teams.includes(filters.team));
+  }
 
-    if (filters && filters.order) {
-      applyOrder(filters.order);
-    }
-  }, [filters, allDrivers, dispatch]);
-
+  if (filters && filters.order) {
+    dispatch(orderDrivers(filters.order));
+  }
+ 
   return (
     <div className={style.container}>
-      {searchedDriver ? (
+      {filteredDrivers.slice(startIndex, endIndex).map((driver) => (
         <Card
-          key={searchedDriver.driverId}
-          driverId={searchedDriver.driverId}
-          firstName={searchedDriver.firstName}
-          lastName={searchedDriver.lastName}
-          image={searchedDriver.image}
-          birthdate={searchedDriver.birthdate}
-          teams={searchedDriver.teams}
+          key={driver.driverId}
+          driverId={driver.driverId}
+          firstName={driver.firstName}
+          lastName={driver.lastName}
+          image={driver.image}
+          birthdate={driver.birthdate}
+          teams={driver.teams ? driver.teams : []}
         />
-      ) : (
-        filteredDriversRef.current
-          .slice(startIndex, endIndex)
-          .map((driver) => (
-            <Card
-              key={driver.driverId}
-              driverId={driver.driverId}
-              firstName={driver.firstName}
-              lastName={driver.lastName}
-              image={driver.image}
-              birthdate={driver.birthdate}
-              teams={driver.teams ? driver.teams : []}
-            />
-          ))
-      )}
+      ))}
     </div>
   );
-};
-
+}; console.log(CardsContainer);
 export default CardsContainer;

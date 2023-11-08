@@ -1,9 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  orderDrivers,
-  filterDbApi,
-  filterByTeam,
-} from "../../redux/actions";
+import { orderDrivers, filterDbApi, filterByTeam } from "../../redux/actions";
 import style from "./FilterButtons.module.css";
 
 const FilterButtons = () => {
@@ -11,26 +7,16 @@ const FilterButtons = () => {
   const teams = useSelector((state) => state.teams);
 
   const handleOrderChange = (value) => {
-    if (value === "nameAsc" || value === "nameDesc" || value === "dobAsc" || value === "dobDesc") {
-      dispatch(orderDrivers(value));
-    }
- console.log(handleOrderChange);
+    dispatch(orderDrivers(value));
   };
-  
 
   const handleFilterSourceChange = (value) => {
-    if (value === "All Drivers" || value === "API" || value === "BD") {
-      dispatch(filterDbApi(value));
-    }
-    console.log(handleFilterSourceChange);
+    dispatch(filterDbApi(value));
   };
-  
 
   const handleFilterByTeam = (value) => {
     dispatch(filterByTeam(value));
-  console.log(handleFilterByTeam);
   };
-  
 
   return (
     <div className={`${style.container} ${style.navbarFilter}`}>

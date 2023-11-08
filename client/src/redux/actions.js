@@ -116,10 +116,6 @@ export const pagination = (value) => {
   };
 };
 
-// En la acción orderDrivers, asegúrate de que los valores action.payload sean "nameAsc", "nameDesc", "dobAsc", o "dobDesc" para que la lógica de ordenamiento funcione correctamente.
-
-// En la acción filterDbApi, verifica que estás pasando el origen (API o BD) adecuadamente como action.payload.source. Asegúrate de que los valores coincidan con la lógica de filtrado en el reducer.
-
 //--------Actualiza un conductor--------
 // export const updateDriver = (id, updatedDriver) => {
 //   return async function (dispatch) {
