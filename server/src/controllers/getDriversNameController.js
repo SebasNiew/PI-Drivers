@@ -1,33 +1,50 @@
-const { Sequelize } = require("sequelize");
-const Op = Sequelize.Op;
-const { Driver } = require("../db");
-const axios = require("axios");
-const imageUrl = "https://acortar.link/7kVOdJ";
+const { getAllDrivers } = require("./getAllDriversController");
 
-const findDrivers = async (name) => {
-  const { data } = await axios.get(
-    `http://localhost:5000/drivers/?name.forename=${name}`
-  );
-  const nameToLower = name.toLowerCase(); //*convierte el nombre de busqueda Name en minuscula
-  const filteredDrivers = data.filter(
-    (
-      driver //*Filtra los conductores de la respuesta de la API en función de una coincidencia insensible a mayúsculas y minúsculas en la propiedad driverRef:
-    ) => driver.driverRef.toLowerCase().includes(nameToLower)
-  );
+// La parte de formato de datos que tenías en apiDriverscrowd
+const formatDriverData = (Elem) => {
+  const imageUrl = Elem.image && Elem.image.url ? Elem.image.url : "https://acortar.link/7kVOdJ";
+  const firstName = Elem.name && Elem.name.forename ? Elem.name.forename : 'Nombre no disponible';
+  const lastName = Elem.name && Elem.name.surname ? Elem.name.surname : 'Apellido no disponible';
 
-  const filteredDB = await Driver.findAll({
-    where: { lastname: { [Op.iLike]: `%${nameToLower}%` } },
-  });
+  const firstNameLower = firstName ? firstName.toLowerCase() : '';
+  const lastNameLower = lastName ? lastName.toLowerCase() : '';
 
-  //*Si no se encuentran conductores ni en la API ni en la base de datos, se lanza un error
-  if (filteredDrivers.length === 0 && filteredDB.length === 0) {
-    throw Error(`No se encontraron conductores con el nombre: ${name}`);
-  }
-
-  const challengedFilters = addImage(filteredDrivers); //verifica que contengan img
-
-  return [...challengedFilters.slice(0, 15), ...filteredDB.slice(0, 15)]; //tira los primeros 15 tanto de BD como API
+  return {
+    driverId: Elem.id,
+    firstName: firstName,
+    lastName: lastName,
+    description: Elem.description || 'Descripción no disponible',
+    image: imageUrl,
+    nationality: Elem.nationality || 'Nacionalidad no disponible',
+    birthdate: Elem.dob || 'Fecha de nacimiento no disponible',
+    teams: Elem.teams || ['Equipos no disponibles'],
+    created: false,
+    // Agrega las propiedades firstNameLower y lastNameLower aquí si las necesitas
+  };
 };
 
+const findDrivers = async (name) => {
+  try {
+    const allDrivers = await getAllDrivers();
+    const nameToLower = name.toLowerCase();
+
+    if (!allDrivers || !Array.isArray(allDrivers)) {
+      throw new Error("Driver data is missing or not an array.");
+    }
+
+    const filteredDrivers = allDrivers.filter((Elem) => {
+      const driverName = (Elem.firstName && Elem.lastName && Elem.firstName.toLowerCase() + " " + Elem.lastName.toLowerCase()) || '';
+      return driverName.includes(nameToLower);
+    });
+
+    if (filteredDrivers.length > 0) {
+      return filteredDrivers.slice(0, 15);
+    } else {
+      throw new Error(`Driver not found: ${name}`);
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 module.exports = { findDrivers };
